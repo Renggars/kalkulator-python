@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator Ilmiah</title>
+    <style>
+      /* Menyembunyikan spinner di input type number */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 rounded shadow-lg text-center w-full max-w-md">
+      <h1 class="text-2xl font-bold mb-4">Kalkulator Ilmiah</h1>
+
+      <div class="input-section space-y-4">
+        <input
+          type="number"
+          id="operand1"
+          placeholder="Masukkan angka pertama"
+          class="border border-gray-300 p-2 rounded w-full"
+        />
+        <input
+          type="number"
+          id="operand2"
+          placeholder="Masukkan angka kedua (opsional)"
+          class="border border-gray-300 p-2 rounded w-full"
+        />
+      </div>
+
+      <div class="operations grid grid-cols-3 gap-4 mt-6">
+        <button
+          onclick="calculate('add')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Tambah
+        </button>
+        <button
+          onclick="calculate('subtract')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Kurang
+        </button>
+        <button
+          onclick="calculate('multiply')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Kali
+        </button>
+        <button
+          onclick="calculate('divide')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Bagi
+        </button>
+        <button
+          onclick="calculate('sin')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Sin
+        </button>
+        <button
+          onclick="calculate('cos')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Cos
+        </button>
+        <button
+          onclick="calculate('tan')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Tan
+        </button>
+        <button
+          onclick="calculate('log')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Log
+        </button>
+        <button
+          onclick="calculate('pow')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          Pangkat
+        </button>
+      </div>
+
+      <div class="result mt-6">
+        <h2 class="text-xl font-semibold">
+          Hasil: <span id="result" class="text-green-500">0</span>
+        </h2>
+      </div>
+    </div>
+
+    <script>
+      function calculate(operation) {
+        const operand1 = document.getElementById("operand1").value;
+        const operand2 = document.getElementById("operand2").value;
+
+        let formData = new FormData();
+        formData.append("operation", operation);
+        formData.append("operands[]", operand1);
+        if (operand2) {
+          formData.append("operands[]", operand2);
+        }
+
+        fetch("/calculate", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("result").innerText = data.result;
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>
